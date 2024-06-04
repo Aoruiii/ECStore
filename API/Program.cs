@@ -14,6 +14,7 @@ builder.Services.AddDbContext<StoreContext>(options =>
            );
    });
 builder.Services.AddAuthorization();
+builder.Services.AddCors();
 
 // Add controllers service
 builder.Services.AddControllers();
@@ -29,6 +30,10 @@ if (app.Environment.IsDevelopment())
 
 // app.UseHttpsRedirection();
 
+app.UseCors(opt =>
+{
+    opt.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000", "http://localhost:3001");
+});
 app.UseAuthorization();
 
 app.MapControllers();
