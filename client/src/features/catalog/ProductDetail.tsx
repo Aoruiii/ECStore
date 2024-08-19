@@ -9,25 +9,27 @@ import {
   Typography,
 } from "@mui/material";
 import { useParams } from "react-router-dom";
-import { Product } from "../../app/models/Product";
+import { Product } from "../../app/models/product";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import agent from "../../app/api/agent";
+import NotFound from "../../app/errors/NotFound";
+import Loading from "../../app/layout/Loading";
 
 function ProductDetail() {
-  const { id } = useParams<string>();
+  const { id } = useParams<{ id: string }>();
   const [product, setProduct] = useState<Product | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    axios
-      .get(`http://localhost:5000/api/Products/${id}`)
-      .then((res) => setProduct(res.data))
-      .catch((error) => console.log(error))
-      .finally(() => setIsLoading(false));
+    id &&
+      agent.Catalog.details(parseInt(id))
+        .then((res) => setProduct(res))
+        .catch((error) => console.log(error))
+        .finally(() => setIsLoading(false));
   }, [id]);
 
-  if (isLoading) return <h3>Loading...</h3>;
-  if (!product) return <h3>Not Found</h3>;
+  if (isLoading) return <Loading />;
+  if (!product) return <NotFound />;
 
   return (
     <Grid container spacing={6}>

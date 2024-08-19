@@ -13,7 +13,8 @@ namespace API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ProductsController : ControllerBase
+    public class ProductsController : BaseApiController
+
     {
         private readonly StoreContext _context;
 
@@ -36,7 +37,7 @@ namespace API.Controllers
             {
                 return await _context.Products.FindAsync(id);
             }
-            return BadRequest("Cannot find the product.");
+            return NotFound("Cannot find the product.");
 
         }
     }
